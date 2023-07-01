@@ -1,9 +1,9 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 uri = "mongodb+srv://admin:admin@cluster0.mt3lzum.mongodb.net/?retryWrites=true&w=majority"
-# Create a new client and connect to the server
+# Create client and connect to server
 client = MongoClient(uri)
-# Send a ping to confirm a successful connection
+# Ping to Confirm connection to Database.
 db = client.pytech
 print("Pinged your deployment. You successfully connected to MongoDB! \n\n-- Pytech C0llection +"
       "List --")
