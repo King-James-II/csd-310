@@ -129,7 +129,7 @@ def show_wishlist(_cursor, _user_id):
                    "FROM user " +
                    "INNER JOIN wishlist ON user.user_id = wishlist.user_id " +
                    "INNER JOIN book ON wishlist.book_id = book.book_id " +
-                   "WHERE user.user_id =" + _user_id)
+                   "WHERE user.user_id =" + _user_id + " ORDER BY book_name")
     wishlists = _cursor.fetchall()
     # Display user's wishlisted books and then return to the account menu.
     print("\n+--------------------------------------+\n" +
@@ -151,7 +151,7 @@ def show_books_to_add(_cursor, _user_id):
     _cursor.execute("SELECT book_id, book_name, author, details "+
                    "FROM book " +
                    "WHERE book_id NOT IN (SELECT book_id FROM wishlist WHERE user_id = " + 
-                   _user_id +");")
+                   _user_id +") ORDER BY book_name;")
     availbooks = _cursor.fetchall()
 
     # This handles if there are no books available if a user has every book wishlisted.
