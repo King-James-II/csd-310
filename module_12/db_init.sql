@@ -33,11 +33,12 @@ CREATE TABLE wishlist (
 
 CREATE TABLE store (
 	store_id INT NOT NULL PRIMARY KEY,
-	locale VARCHAR(500) NOT NULL
+	locale VARCHAR(500) NOT NULL,
+	hours VARCHAR(200)
 );
 -- Repopulate database values with sample data.
-INSERT INTO store (store_id, locale)
-VALUES (2235, '1234 Elm Street, Lincoln, NE 68501');
+INSERT INTO store (store_id, locale, hours)
+VALUES (2235, '1234 Elm Street, Lincoln, NE 68501', 'Sunday 11AM-7PM, Monday-Saturday 10AM-8PM');
 
 INSERT INTO book (book_id, book_name, details, author)
 VALUES 	(872465930, 'The Enigmatic Quest', 

@@ -1,9 +1,9 @@
 # This application simulates a book store application that stores book and user data including
 # wishlists that a user can modify. The data is stored within a database and it uses SQL queries
-# within the application to pull or add data to the user's wishlist within the database.  
+# within the application to pull or add data to the user's wishlist within the database.
+import sys
 import mysql.connector
 from mysql.connector import errorcode
-import sys
 
 # Setup server configuration details for MySQL connection
 config = {
@@ -70,7 +70,8 @@ def show_locations(_cursor):
            "+-----------------------------------------+\n")
     # Display each store stored within the stores variable.
     for store in stores:
-        print("Store ID: {}".format(store[0]) + "\nStore Address: {}".format(store[1]) + "\n")
+        print("Store ID: {}".format(store[0]) + "\nAddress: {}".format(store[1]) + "\n" + 
+              "Hours: {}\n".format(store[2]))
     input("Press enter to return to the previous menu... ")
     show_menu()
 
@@ -97,7 +98,7 @@ def validate_user():
     # Throw exception message to user and require reentry of user id.
     except:
         print("\nUser ID " + user_input + " was not found please try again.\n"+
-              "Or enter q to quit and exit to pervious menu.")
+              "Or enter q to quit and exit to previous menu.")
         return validate_user()
 
 # Function displays account menu and calls other functions to display and modify user's account.
@@ -120,6 +121,7 @@ def show_account_menu():
         show_menu()
     else:
         print("Invalid input please try again.")
+        show_account_menu()
 
 # Function to pull user's wishlist data from the database and display it.
 def show_wishlist(_cursor, _user_id):
@@ -171,23 +173,26 @@ def show_books_to_add(_cursor, _user_id):
         try:
             # Prompt for book option from user and store the book_id for the specific book.
             book_opt = int(input("Please enter an option for which book to add: "))
+            if book_opt <= 0:
+                raise Exception()
             book_id = str(availbooks[book_opt-1][0])
             # Execute SQL INSERT statement to add value to the wishlist table for the user and
-            # the book ID selected by the user.
+            # the book ID selected by the user. After adding the value commit it to the database.
             _cursor.execute("INSERT INTO wishlist (user_id, book_id) " +
                        "VALUES (" + str(_user_id) + ", " + book_id + ")")
+            db.commit()
             print("\nAdded " + availbooks[book_opt-1][1] + " to the wishlist sucessfully.")
             input("Press enter to continue...")
         # Throws an exception if the option is not valid within the current options for available
         # books
         except:
-            print("Invalid book option please try again")
+            print("Invalid book option please try again...")
             show_books_to_add(cursor, _user_id)
         # After adding the book successfully return to the previous account menu for the user.
         show_account_menu()
 # Try/except block for handling potential MySQL database errors
 try:
-    db = mysql.connector.connect(**config) # connect to the WhatABook database 
+    db = mysql.connector.connect(**config) # connect to the WhatABook database
     cursor = db.cursor() # cursor for MySQL queries
     show_menu()
 # Throws an exception if there is an error.
@@ -200,5 +205,4 @@ except mysql.connector.Error as err:
         print(err)
 # Close connection to database after determining an exception error.
 finally:
-    """ close the connection to MySQL """
     db.close()
